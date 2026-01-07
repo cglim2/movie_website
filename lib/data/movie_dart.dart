@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:movie_website/model/movie_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +8,7 @@ class MovieData {
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwM2QwY2Y0MDdiOWIzYTNlOGMxN2NlMTYwNzBmODA1MiIsIm5iZiI6MTc2NzczOTc1My4xMzkwMDAyLCJzdWIiOiI2OTVkOTE2OTA2Yjg2MTcwZTJiNWRkMTEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.lNwUm8UEKj0AMIkb1h2KymgVZAv_89mm5w1A086hDgY';
 
   Future<List<MovieModel>> fetchTopRatedMovies() async {
-    final response = http.get(
+    final response = await http.get(
       Uri.parse('$baseUrl/top_rated?language=en-US&page=1'),
       headers: {
         'Authorization': 'Bearer $bearerToken',
@@ -17,9 +16,10 @@ class MovieData {
       },
     );
     if (response.statusCode == 200) {
-      return ((jsonDecode(response.body)['results']) as List)
+      //print(response.body);
+      return ((jsonDecode(response.body)['results'] as List)
           .map((e) => MovieModel.fromJson(e))
-          .toList();
+          .toList());
     } else {
       throw Exception('Failed to load top rated movies');
     }

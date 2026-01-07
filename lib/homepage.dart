@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:movie_website/data/movie_dart.dart';
+import 'package:movie_website/model/movie_model.dart';
 //import 'package:flutter/rendering.dart';
 import 'package:movie_website/skeleton_loading/carousel_skeleton.dart';
 import 'package:movie_website/skeleton_loading/now_skeleton.dart';
 import 'package:movie_website/skeleton_loading/popular_skeleton.dart';
 import 'package:movie_website/wedget/icon_searchbar.dart';
 import 'package:movie_website/wedget/main_drawer.dart';
+import 'package:movie_website/widget/main_carousel_slider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,6 +17,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<MovieModel> _topRatedMovie = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getMovieData();
+    });
+  }
+
+  void getMovieData() async {
+    var data = MovieData();
+    _topRatedMovie = await data.fetchTopRatedMovies();
+    setState(() {
+      isLoading = false;
+    });
+    //print(_topRatedMovie[0].originalTitle);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +60,9 @@ class _HomePageState extends State<HomePage> {
                   flex: 2,
                   child: Padding(
                     padding: EdgeInsets.only(left: 16.0),
-                    child: CarouselSkeleton(),
+                    child: isLoading
+                        ? CarouselSkeleton()
+                        : MainCarouselSlider(topRatedMovies: _topRatedMovie),
                   ),
                 ),
                 SizedBox(width: 20),
