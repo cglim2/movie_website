@@ -24,4 +24,40 @@ class MovieData {
       throw Exception('Failed to load top rated movies');
     }
   }
+
+  Future<List<MovieModel>> fetchNowPalyingMovies() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/now_playing?language=en-US&page=1'),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'accept': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      return ((jsonDecode(response.body)['results'] as List)
+          .map((e) => MovieModel.fromJson(e))
+          .toList());
+    } else {
+      throw Exception('Failed to load top rated movies');
+    }
+  }
+
+  Future<List<MovieModel>> fetchpopularmovies() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/popular?language=en-US&page=1'),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'accept': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      return ((jsonDecode(response.body)['results'] as List)
+          .map((e) => MovieModel.fromJson(e))
+          .toList());
+    } else {
+      throw Exception('Failed to load top rated movies');
+    }
+  }
 }
